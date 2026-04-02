@@ -1,0 +1,13 @@
+services:
+  kots2007-server:
+    image: nephatrine/quake2-q2pro:latest
+    container_name: kots2007-server
+    restart: unless-stopped
+    environment:
+      QUAKE2_DATA: /mnt/config/data/quake2
+      QUAKE2_INSTALL: "false"
+      GAME_START: "+set dedicated 1 +set game kots2007 +exec server.cfg +map q2dm1"
+    ports:
+      - "27910:27910/udp"
+    volumes:
+      - ./config:/mnt/config

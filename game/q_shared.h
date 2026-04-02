@@ -58,7 +58,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 
 typedef unsigned char 		byte;
-typedef enum {false, true}	qboolean;
+
+typedef enum {qfalse, qtrue}	qboolean;
+
+#ifndef false
+#define false qfalse
+#endif
+
+#ifndef true
+#define true qtrue
+#endif
 
 
 #ifndef NULL

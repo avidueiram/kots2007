@@ -20,6 +20,41 @@ See [kots_db.sql](kots_db.sql). However, sadly if I remember correctly there's a
 ### Linux
 TODO
 
+### Linux via Docker (macOS-friendly)
+
+This repository now includes a Linux build container and helper scripts.
+
+1. Build image and run default make command:
+   - `bash scripts/docker-build.sh`
+2. Run a custom make command in container:
+   - `bash scripts/docker-build.sh make -C game all`
+3. Use the minimal sample wrapper for make:
+   - `bash scripts/docker-make-sample.sh -C game all`
+
+Notes:
+- The repository is mounted into the container at `/workspace`.
+- The committed Linux make target is in `game/Makefile` and currently outputs `game/gamei386.so`.
+
+### Dedicated Quake2 server via Docker
+
+Server compose setup is under `docker/quake2/docker-compose.yml`.
+
+1. Build the module and sync it into server data path:
+   - `bash scripts/docker-quake2-sync-mod.sh`
+2. Start dedicated server container:
+   - `bash scripts/docker-quake2-up.sh`
+3. Stop server:
+   - `bash scripts/docker-quake2-down.sh`
+
+Data/layout details:
+- Mod data path: `docker/quake2/config/data/quake2/kots2007/`
+- Server config path: `docker/quake2/config/data/quake2/kots2007/server.cfg`
+- Synced game module path for ARM64 container: `.../kots2007/gamearm64.so`
+
+Important:
+- This setup uses `QUAKE2_INSTALL=false`; no demo pak files are auto-downloaded.
+- Ensure valid Quake II data (for example `baseq2/pak*.pak`) exists under `docker/quake2/config/data/quake2/`.
+
 ## MySQL
 https://downloads.mysql.com/archives/get/p/23/file/mysql-noinstall-5.0.41-win32.zip
 
