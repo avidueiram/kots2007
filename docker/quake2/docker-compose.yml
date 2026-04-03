@@ -1,12 +1,37 @@
 services:
+  db:
+    image: mariadb:10.5
+    container_name: kots2007-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: kots
+      MARIADB_USER: user
+      MARIADB_PASSWORD: pass
+    volumes:
+      - ./config/db:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d:ro
+      - ../../kots_db.sql:/seed/kots_db.sql:ro
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
   kots2007-server:
-    image: nephatrine/quake2-q2pro:latest
+    image: kots2007-q2pro:local
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: kots2007-server
     restart: unless-stopped
     environment:
       QUAKE2_DATA: /mnt/config/data/quake2
       QUAKE2_INSTALL: "false"
-      GAME_START: "+set dedicated 1 +set game kots2007 +exec server.cfg +map q2dm1"
+      GAME_START: "+set dedicated 1 +set game kots2007 +exec server.cfg +map base1"
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "27910:27910/udp"
     volumes:

@@ -1,3 +1,0 @@
-crond: crond (busybox 1.37.0) started, log level 6
-crond: crond (busybox 1.37.0) started, log level 6
-crond: USER root pid 260 cmd run-parts /etc/periodic/15min

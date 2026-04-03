@@ -319,6 +319,8 @@ static void *RunDbThread(void *args)
 {
 	dbthread_t *t = (dbthread_t *)args;
 
+	mysql_thread_init();
+
 	t->mysql = InitializeDbConnection();
 
 	while (1)
@@ -328,6 +330,8 @@ static void *RunDbThread(void *args)
 		if (!t->is_running)
 			break;
 	}
+
+	mysql_thread_end();
 
 	return NULL;
 }
@@ -505,12 +509,16 @@ void SetMysqlOptions(MYSQL *mysql)
 {
 	char secure_auth = 1;
 	char reconnect = 1;
+	char ssl_enforce = 0;
+	char ssl_verify_server_cert = 0;
 	unsigned int connect_timeout = KOTS_MYSQL_CONNECT_TIMEOUT;
 
 #ifdef MYSQL_SECURE_AUTH
 	mysql_options(mysql, MYSQL_SECURE_AUTH, &secure_auth);
 #endif
 	mysql_options(mysql, MYSQL_OPT_RECONNECT, &reconnect);
+	mysql_options(mysql, MYSQL_OPT_SSL_ENFORCE, &ssl_enforce);
+	mysql_options(mysql, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &ssl_verify_server_cert);
 	mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (char *)&connect_timeout);
 	mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (char *)&connect_timeout);
 	mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (char *)&connect_timeout);

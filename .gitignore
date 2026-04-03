@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Docker local runtime state
+docker/quake2/config/db/
+docker/quake2/config/home/
+docker/quake2/config/log/
+docker/quake2/config/data/quake2/baseq2/
